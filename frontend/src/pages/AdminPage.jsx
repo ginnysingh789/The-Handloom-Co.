@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { api, formatPrice } from '../utils/api';
 import { staticProducts } from '../data/products';
-import { getContactSettings, saveContactSettings } from '../utils/contactConfig';
+import { getCachedSettings, cacheSettings } from '../utils/contactConfig';
 
 function slugify(text) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -26,7 +26,8 @@ export default function AdminPage() {
   const [uploading, setUploading] = useState(false);
 
   // Contact settings state
-  const [contactSettings, setContactSettings] = useState(getContactSettings());
+  const [contactSettings, setContactSettings] = useState(getCachedSettings());
+  const [settingsLoading, setSettingsLoading] = useState(false);
   const [settingsSaved, setSettingsSaved] = useState(false);
 
   // Form state
@@ -147,7 +148,16 @@ export default function AdminPage() {
   };
 
   useEffect(() => {
-    if (isAuthenticated) loadProducts();
+    if (isAuthenticated) {
+      loadProducts();
+      // Load settings from DB
+      api.getSettings().then((data) => {
+        if (data && data.whatsappNumber) {
+          setContactSettings(data);
+          cacheSettings(data);
+        }
+      });
+    }
   }, [isAuthenticated]);
 
   const resetForm = () => {
@@ -928,10 +938,15 @@ export default function AdminPage() {
 
               <div className="flex items-center gap-4 mt-8 pt-6 border-t border-gray-100">
                 <button
-                  onClick={() => {
-                    saveContactSettings(contactSettings);
-                    setSettingsSaved(true);
-                    setTimeout(() => setSettingsSaved(false), 4000);
+                  onClick={async () => {
+                    setSettingsLoading(true);
+                    const result = await api.updateSettings(contactSettings);
+                    setSettingsLoading(false);
+                    if (result && result.success) {
+                      cacheSettings({ whatsappNumber: result.whatsappNumber, contactEmail: result.contactEmail });
+                      setSettingsSaved(true);
+                      setTimeout(() => setSettingsSaved(false), 4000);
+                    }
                   }}
                   className="px-8 py-3 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-bold transition-all shadow-lg shadow-primary/20 flex items-center gap-2"
                 >
@@ -939,8 +954,9 @@ export default function AdminPage() {
                   Save Settings
                 </button>
                 <button
-                  onClick={() => {
-                    setContactSettings(getContactSettings());
+                  onClick={async () => {
+                    const data = await api.getSettings();
+                    if (data) { setContactSettings(data); cacheSettings(data); }
                     setSettingsSaved(false);
                   }}
                   className="px-6 py-3 rounded-lg border border-gray-300 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors"

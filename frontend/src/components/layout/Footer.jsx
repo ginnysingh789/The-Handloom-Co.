@@ -1,8 +1,21 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getContactSettings } from '../../utils/contactConfig';
+import { api } from '../../utils/api';
+import { getCachedSettings, cacheSettings } from '../../utils/contactConfig';
 
 export default function Footer() {
-  const { whatsappNumber, contactEmail } = getContactSettings();
+  const [settings, setSettings] = useState(getCachedSettings());
+
+  useEffect(() => {
+    api.getSettings().then((data) => {
+      if (data && data.whatsappNumber) {
+        setSettings(data);
+        cacheSettings(data);
+      }
+    });
+  }, []);
+
+  const { whatsappNumber, contactEmail } = settings;
 
   return (
     <footer className="bg-[#051109] text-white pt-12 sm:pt-20 pb-8 sm:pb-10 border-t border-white/10">
@@ -11,10 +24,10 @@ export default function Footer() {
           {/* Brand */}
           <div className="space-y-4 sm:space-y-6 col-span-2 md:col-span-1">
             <Link to="/" className="flex items-center gap-3">
-              <img src="/logo.png" alt="World Weave Carpet" className="h-11 w-11 sm:h-14 sm:w-14 object-contain" />
+              <img src="/logo.png" alt="World Weave Carpets" className="h-11 w-11 sm:h-14 sm:w-14 object-contain" />
               <div className="flex flex-col">
                 <h2 className="text-lg font-bold tracking-wider leading-none"><span className="text-[#C5A55A]">WORLD WEAVE</span></h2>
-                <span className="text-[10px] tracking-[0.25em] uppercase text-primary font-bold">CARPET</span>
+                <span className="text-[10px] tracking-[0.25em] uppercase text-primary font-bold">CARPETS</span>
               </div>
             </Link>
             <p className="text-white/60 text-sm leading-relaxed max-w-xs">
@@ -47,13 +60,13 @@ export default function Footer() {
             <h4 className="text-sm font-bold uppercase tracking-widest mb-6 text-white/90">Contact Us</h4>
             <ul className="space-y-3.5 text-sm text-white/60">
               <li>
-                <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">
+                <a href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Hi! I'm visiting your website and would love to know more about your handcrafted rugs and carpets. Could you help me?")}`} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">
                   <span className="material-symbols-outlined text-sm">chat</span>
                   WhatsApp
                 </a>
               </li>
               <li>
-                <a href={`mailto:${contactEmail}`} className="hover:text-primary transition-colors flex items-center gap-2">
+                <a href={`mailto:${contactEmail}?subject=${encodeURIComponent('Inquiry - World Weave Carpets')}&body=${encodeURIComponent('Hello World Weave Carpets Team,\n\nI am interested in learning more about your handcrafted rugs and carpets.\n\nPlease share details about:\n- Available collections\n- Pricing & customization options\n- Delivery timeline\n\nLooking forward to hearing from you.\n\nThank you.')}`} className="hover:text-primary transition-colors flex items-center gap-2">
                   <span className="material-symbols-outlined text-sm">mail</span>
                   {contactEmail}
                 </a>
@@ -76,7 +89,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-white/40 text-xs">© {new Date().getFullYear()} World Weave Carpet. All rights reserved.</p>
+          <p className="text-white/40 text-xs">© {new Date().getFullYear()} World Weave Carpets. All rights reserved.</p>
         </div>
       </div>
     </footer>

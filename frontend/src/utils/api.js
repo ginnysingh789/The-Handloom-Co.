@@ -1,4 +1,4 @@
-import { getContactSettings } from './contactConfig';
+import { getCachedSettings } from './contactConfig';
 
 const API_BASE = '/api';
 
@@ -92,6 +92,14 @@ export const api = {
     }
   },
 
+  // Settings
+  getSettings: () => fetchApi('/settings'),
+  updateSettings: (data) => fetchApi('/settings', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getAuthToken()}` },
+    body: JSON.stringify(data),
+  }),
+
   // Reviews
   getReviews: () => fetchApi('/reviews'),
   getAllReviews: () => fetchApi('/reviews/all', {
@@ -126,7 +134,7 @@ export function formatPrice(price) {
 }
 
 export function generateWhatsAppLink(product, variant, size) {
-  const { whatsappNumber } = getContactSettings();
+  const { whatsappNumber } = getCachedSettings();
   const text = encodeURIComponent(
     `Hi! I'm interested in the ${product.name}\n` +
     `Color: ${variant?.color?.name || 'N/A'}\n` +

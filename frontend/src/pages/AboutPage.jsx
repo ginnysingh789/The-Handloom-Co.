@@ -218,7 +218,7 @@ export default function AboutPage() {
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-light text-slate-900 mb-6">Crafted by Artisan Hands</h2>
               <div className="space-y-5 text-slate-600 leading-relaxed">
                 <p>
-                  Every World Weave Carpet creation tells a story of heritage and craftsmanship that spans generations. Our rugs are meticulously handcrafted by skilled artisans in Jaipur, India, using techniques passed down through families for centuries.
+                  Every World Weave Carpets creation tells a story of heritage and craftsmanship that spans generations. Our rugs are meticulously handcrafted by skilled artisans in Jaipur, India, using techniques passed down through families for centuries.
                 </p>
                 <p>
                   We work directly with artisan communities, ensuring fair wages and preserving traditional craftsmanship. Each rug takes 3–6 months to complete, with master weavers tying thousands of individual knots by hand.
@@ -405,7 +405,7 @@ export default function AboutPage() {
           <div className="flex flex-wrap justify-center gap-4">
             <a href="/" className="btn-primary text-lg px-8 py-3">Explore Collections</a>
             <a
-              href={getWhatsAppLink("Hi! I'd like to know more about World Weave Carpet.")}
+              href={getWhatsAppLink("Hi! I'd like to know more about World Weave Carpets.")}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-white/10 border border-white/20 text-white font-bold uppercase tracking-wider px-8 py-3 rounded-lg hover:bg-white/20 transition-colors text-lg flex items-center gap-2"

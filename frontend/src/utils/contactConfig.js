@@ -1,37 +1,30 @@
 const DEFAULTS = {
   whatsappNumber: '919999999999',
-  contactEmail: 'info@workweavecarpet.com',
+  contactEmail: 'info@worldweavecarpets.com',
 };
 
-const STORAGE_KEY = 'wwc_contact_settings';
+const CACHE_KEY = 'wwc_contact_cache';
 
-export function getContactSettings() {
+// Cache settings locally for instant load, but always prefer API data
+export function getCachedSettings() {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      return { ...DEFAULTS, ...parsed };
-    }
-  } catch {
-    // ignore parse errors
-  }
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) return { ...DEFAULTS, ...JSON.parse(cached) };
+  } catch { /* ignore */ }
   return { ...DEFAULTS };
 }
 
-export function saveContactSettings(settings) {
+export function cacheSettings(settings) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-    return true;
-  } catch {
-    return false;
-  }
+    localStorage.setItem(CACHE_KEY, JSON.stringify(settings));
+  } catch { /* ignore */ }
 }
 
 export function getWhatsAppLink(message = "Hi! I'm interested in your luxury rugs.") {
-  const { whatsappNumber } = getContactSettings();
+  const { whatsappNumber } = getCachedSettings();
   return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
 
 export function getContactEmail() {
-  return getContactSettings().contactEmail;
+  return getCachedSettings().contactEmail;
 }

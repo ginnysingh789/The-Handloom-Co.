@@ -21,10 +21,10 @@ export default function Header() {
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 h-16 sm:h-20 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
-          <img src="/logo.png" alt="World Weave Carpet" className="h-11 w-11 sm:h-14 sm:w-14 object-contain" />
+          <img src="/logo.png" alt="World Weave Carpets" className="h-11 w-11 sm:h-14 sm:w-14 object-contain" />
           <div className="flex flex-col">
             <h1 className="text-base sm:text-xl font-bold tracking-wider leading-none"><span className="text-[#C5A55A]">WORLD WEAVE</span></h1>
-            <span className="text-[9px] sm:text-[11px] tracking-[0.25em] uppercase text-primary font-bold">CARPET</span>
+            <span className="text-[9px] sm:text-[11px] tracking-[0.25em] uppercase text-primary font-bold">CARPETS</span>
           </div>
         </Link>
 

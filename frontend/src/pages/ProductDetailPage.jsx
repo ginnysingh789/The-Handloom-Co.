@@ -215,7 +215,7 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="flex items-center gap-3 mb-2 sm:mb-3">
                   <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-forest-dark tracking-tight">{product.name}</h1>
-                  <img src="/logo.png" alt="World Weave Carpet" className="h-8 w-8 sm:h-10 sm:w-10 object-contain opacity-60" />
+                  <img src="/logo.png" alt="World Weave Carpets" className="h-8 w-8 sm:h-10 sm:w-10 object-contain opacity-60" />
                 </div>
                 <p className="text-xl sm:text-2xl font-semibold text-primary">{formatPrice(currentPrice)}</p>
                 {product.rating > 0 && (
@@ -449,7 +449,7 @@ export default function ProductDetailPage() {
                 Each rug is a singular masterpiece, born from the hands of master weavers. This isn't just manufacturing; it is a rhythmic, meditative process that preserves centuries of heritage.
               </p>
               <p className="text-gray-600 text-lg leading-relaxed">
-                By choosing World Weave Carpet, you directly support fair wages and sustainable wool sourcing, ensuring this ancient art form continues to thrive for generations to come.
+                By choosing World Weave Carpets, you directly support fair wages and sustainable wool sourcing, ensuring this ancient art form continues to thrive for generations to come.
               </p>
               <div className="pt-4">
                 <Link to="/" className="inline-flex items-center gap-2 text-primary font-bold hover:underline decoration-2 underline-offset-4 transition-all">
