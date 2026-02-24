@@ -1,0 +1,84 @@
+import { Link } from 'react-router-dom';
+import { getContactSettings } from '../../utils/contactConfig';
+
+export default function Footer() {
+  const { whatsappNumber, contactEmail } = getContactSettings();
+
+  return (
+    <footer className="bg-[#051109] text-white pt-12 sm:pt-20 pb-8 sm:pb-10 border-t border-white/10">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 sm:gap-10 mb-10 sm:mb-16">
+          {/* Brand */}
+          <div className="space-y-4 sm:space-y-6 col-span-2 md:col-span-1">
+            <Link to="/" className="flex items-center gap-3">
+              <img src="/logo.png" alt="World Weave Carpet" className="h-11 w-11 sm:h-14 sm:w-14 object-contain" />
+              <div className="flex flex-col">
+                <h2 className="text-lg font-bold tracking-wider leading-none"><span className="text-[#C5A55A]">WORLD WEAVE</span></h2>
+                <span className="text-[10px] tracking-[0.25em] uppercase text-primary font-bold">CARPET</span>
+              </div>
+            </Link>
+            <p className="text-white/60 text-sm leading-relaxed max-w-xs">
+              Crafting the finest hand-knotted rugs for the world's most beautiful homes.
+            </p>
+          </div>
+
+          {/* About Us */}
+          <div>
+            <h4 className="text-sm font-bold uppercase tracking-widest mb-6 text-white/90">About Us</h4>
+            <ul className="space-y-3.5 text-sm text-white/60">
+              <li><Link to="/about" className="hover:text-primary transition-colors">Our Story</Link></li>
+              <li><Link to="/about" className="hover:text-primary transition-colors">Customer Reviews</Link></li>
+              <li><Link to="/journal" className="hover:text-primary transition-colors">Journal</Link></li>
+            </ul>
+          </div>
+
+          {/* Services */}
+          <div>
+            <h4 className="text-sm font-bold uppercase tracking-widest mb-6 text-white/90">Services</h4>
+            <ul className="space-y-3.5 text-sm text-white/60">
+              <li><Link to="/" className="hover:text-primary transition-colors">Collections</Link></li>
+              <li><Link to="/customize" className="hover:text-primary transition-colors">Customize Your Rug</Link></li>
+              <li><Link to="/b2b" className="hover:text-primary transition-colors">B2B Program</Link></li>
+            </ul>
+          </div>
+
+          {/* Contact Us */}
+          <div>
+            <h4 className="text-sm font-bold uppercase tracking-widest mb-6 text-white/90">Contact Us</h4>
+            <ul className="space-y-3.5 text-sm text-white/60">
+              <li>
+                <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">
+                  <span className="material-symbols-outlined text-sm">chat</span>
+                  WhatsApp
+                </a>
+              </li>
+              <li>
+                <a href={`mailto:${contactEmail}`} className="hover:text-primary transition-colors flex items-center gap-2">
+                  <span className="material-symbols-outlined text-sm">mail</span>
+                  {contactEmail}
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Quick Access */}
+          <div>
+            <h4 className="text-sm font-bold uppercase tracking-widest mb-6 text-white/90">Quick Access</h4>
+            <ul className="space-y-3.5 text-sm text-white/60">
+              <li>
+                <Link to="/admin" className="hover:text-primary transition-colors flex items-center gap-2">
+                  <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
+                  Admin Panel
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-white/40 text-xs">© {new Date().getFullYear()} World Weave Carpet. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  );
+}

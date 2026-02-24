@@ -1,0 +1,92 @@
+name: Deploy Rugs App
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Pull source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Build frontend locally
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+
+      - name: Transfer and deploy to server
+        env:
+          SSH_HOST: ${{ secrets.DROPLET_IP }}
+          SSH_USER: ${{ secrets.DROPLET_USER }}
+          SSH_KEY: ${{ secrets.DROPLET_SSH_KEY }}
+          ENV_PORT: ${{ secrets.PORT }}
+          ENV_MONGO: ${{ secrets.MONGODB_URI }}
+          ENV_CLD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          ENV_CLD_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          ENV_CLD_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          ENV_ADMIN_USER: ${{ secrets.ADMIN_USERNAME }}
+          ENV_ADMIN_PASS: ${{ secrets.ADMIN_PASSWORD }}
+          ENV_ORIGINS: ${{ secrets.ALLOWED_ORIGINS }}
+          ENV_JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: |
+          # Setup SSH key
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts 2>/dev/null
+
+          SSH_OPTS="-i ~/.ssh/deploy_key -o StrictHostKeyChecking=no"
+          REMOTE="$SSH_USER@$SSH_HOST"
+          APP_DIR="/home/rugs-app"
+
+          # Sync project files (exclude node_modules, .env, .git)
+          rsync -avz --delete \
+            --exclude 'node_modules' \
+            --exclude '.env' \
+            --exclude '.git' \
+            -e "ssh $SSH_OPTS" \
+            ./ $REMOTE:$APP_DIR/
+
+          # Generate .env content
+          ENV_CONTENT="PORT=${ENV_PORT:-5000}
+          MONGODB_URI=${ENV_MONGO}
+          NODE_ENV=production
+          CLOUDINARY_CLOUD_NAME=${ENV_CLD_NAME}
+          CLOUDINARY_API_KEY=${ENV_CLD_KEY}
+          CLOUDINARY_API_SECRET=${ENV_CLD_SECRET}
+          ADMIN_USERNAME=${ENV_ADMIN_USER}
+          ADMIN_PASSWORD=${ENV_ADMIN_PASS}
+          ALLOWED_ORIGINS=${ENV_ORIGINS}
+          JWT_SECRET=${ENV_JWT_SECRET}"
+
+          # Write .env and restart app on remote server
+          ssh $SSH_OPTS $REMOTE << REMOTE_SCRIPT
+            echo "$ENV_CONTENT" | sed 's/^[[:space:]]*//' > $APP_DIR/backend/.env
+
+            cd $APP_DIR/backend
+            npm ci --omit=dev
+
+            # Restart or start PM2 process
+            if command -v pm2 &> /dev/null; then
+              pm2 describe rugs-app > /dev/null 2>&1 && pm2 restart rugs-app || (cd $APP_DIR/backend && pm2 start server.js --name rugs-app && pm2 save)
+            else
+              npm install -g pm2
+              cd $APP_DIR/backend
+              pm2 start server.js --name rugs-app
+              pm2 save
+              pm2 startup | tail -1 | bash
+            fi
+
+            echo "=== Deploy finished ==="
+          REMOTE_SCRIPT
