@@ -26,7 +26,7 @@ const productSchema = new mongoose.Schema(
     longDescription: { type: String },
     basePrice: { type: Number, required: true },
     originalPrice: { type: Number },
-    currency: { type: String, default: '₹' },
+    currency: { type: String, default: '$' },
     category: { type: String, required: true },
     collection: { type: String },
     tags: [{ type: String }],

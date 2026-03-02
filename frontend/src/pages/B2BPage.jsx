@@ -76,10 +76,10 @@ export default function B2BPage() {
           <span className="text-primary font-medium tracking-widest uppercase text-sm bg-white/10 backdrop-blur-sm px-4 py-1 rounded-full border border-white/20">
             B2B Partnerships
           </span>
-          <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold text-white leading-tight tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-white leading-tight tracking-tight">
             B2B Partnerships <br /> <span className="italic font-serif font-light text-white/80">What We Offer</span>
           </h1>
-          <p className="text-base sm:text-xl text-gray-200 max-w-2xl font-light leading-relaxed">
+          <p className="text-sm sm:text-base md:text-xl text-gray-200 max-w-2xl font-light leading-relaxed">
             We partner with businesses to deliver crafted rugs and related services at scale — with care, transparency, and a service level that respects your timelines and brand standards.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mt-4">

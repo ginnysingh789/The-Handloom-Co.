@@ -20,9 +20,13 @@ export function cacheSettings(settings) {
   } catch { /* ignore */ }
 }
 
+function sanitizePhone(num) {
+  return (num || '').replace(/[^0-9]/g, '');
+}
+
 export function getWhatsAppLink(message = "Hi! I'm interested in your luxury rugs.") {
   const { whatsappNumber } = getCachedSettings();
-  return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/${sanitizePhone(whatsappNumber)}?text=${encodeURIComponent(message)}`;
 }
 
 export function getContactEmail() {

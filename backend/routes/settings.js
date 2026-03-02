@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
       settings = await Settings.create({ key: 'contact' });
     }
     res.json({
-      whatsappNumber: settings.whatsappNumber,
+      whatsappNumber: (settings.whatsappNumber || '').replace(/[^\d]/g, ''),
       contactEmail: settings.contactEmail,
     });
   } catch (err) {
@@ -24,8 +24,8 @@ router.put('/', requireAuth, async (req, res) => {
   try {
     const { whatsappNumber, contactEmail } = req.body;
     const update = {};
-    if (whatsappNumber) update.whatsappNumber = whatsappNumber;
-    if (contactEmail) update.contactEmail = contactEmail;
+    if (whatsappNumber) update.whatsappNumber = whatsappNumber.replace(/[^\d]/g, '');
+    if (contactEmail) update.contactEmail = contactEmail.trim();
 
     const settings = await Settings.findOneAndUpdate(
       { key: 'contact' },

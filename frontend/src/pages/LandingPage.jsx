@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { api, formatPrice } from '../utils/api';
 import { staticProducts, staticCollections } from '../data/products';
 import { useCart } from '../context/CartContext';
@@ -21,6 +21,11 @@ export default function LandingPage() {
   const [activeFilter, setActiveFilter] = useState('All');
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [reviewForm, setReviewForm] = useState({ name: '', role: '', text: '', rating: 5 });
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
@@ -44,16 +49,31 @@ export default function LandingPage() {
 
   useEffect(() => {
     async function load() {
-      const prodData = await api.getProducts();
+      const [prodData, reviewData] = await Promise.all([
+        api.getProducts(),
+        api.getReviews(),
+      ]);
       if (prodData?.length) {
-        // Merge: DB products (new arrivals) on top, then static products that aren't duplicated
         const dbSlugs = new Set(prodData.map(p => p.slug));
         const uniqueStatic = staticProducts.filter(p => !dbSlugs.has(p.slug));
         setProducts([...prodData, ...uniqueStatic]);
       }
+      if (reviewData?.length) setReviews(reviewData);
     }
     load();
   }, []);
+
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+    if (!reviewForm.name || !reviewForm.text) return;
+    setReviewSubmitting(true);
+    const result = await api.submitReview(reviewForm);
+    setReviewSubmitting(false);
+    if (result && result._id) {
+      setReviewSubmitted(true);
+      setReviewForm({ name: '', role: '', text: '', rating: 5 });
+    }
+  };
 
   const categories = ['All', ...new Set(products.map((p) => p.category))];
   const filtered = activeFilter === 'All' ? products : products.filter((p) => p.category === activeFilter);
@@ -440,6 +460,165 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Testimonials — Dynamic from DB */}
+      {reviews.length > 0 && (
+        <section className="py-16 sm:py-24 bg-background-light">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12 sm:mb-16">
+              <span className="text-primary font-bold tracking-[0.2em] uppercase text-sm mb-3 block">Testimonials</span>
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-light text-slate-900 mb-4">What Our Customers Say</h2>
+              <div className="h-1 w-20 bg-primary mx-auto"></div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {reviews.slice(0, 6).map((review, i) => (
+                <motion.div
+                  key={review._id || i}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={{ ...fadeUp, visible: { ...fadeUp.visible, transition: { duration: 0.4, delay: (i % 6) * 0.08 } } }}
+                  className="bg-white rounded-xl p-6 sm:p-8 shadow-sm hover:shadow-lg transition-shadow border border-gray-100"
+                >
+                  <div className="flex text-accent-gold mb-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span key={star} className="material-symbols-outlined text-base" style={{ fontVariationSettings: star <= review.rating ? "'FILL' 1" : "'FILL' 0" }}>star</span>
+                    ))}
+                  </div>
+                  <p className="text-slate-600 text-sm leading-relaxed mb-6">"{review.text}"</p>
+                  <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                      <span className="material-symbols-outlined text-primary text-lg">person</span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-slate-800">{review.name}</p>
+                      {review.role && <p className="text-xs text-slate-500">{review.role}</p>}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
+              <button
+                onClick={() => { setShowReviewModal(true); setReviewSubmitted(false); }}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-bold uppercase tracking-widest transition-all shadow-lg shadow-primary/20"
+              >
+                <span className="material-symbols-outlined text-lg">edit</span>
+                Write a Review
+              </button>
+              <Link to="/about" className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary hover:text-slate-900 transition-colors">
+                Read All Reviews
+                <span className="material-symbols-outlined text-lg">arrow_forward</span>
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Write a Review Modal */}
+      <AnimatePresence>
+        {showReviewModal && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 z-50" onClick={() => setShowReviewModal(false)} />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+            >
+            <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto pointer-events-auto">
+              <div className="bg-[#0A2E18] px-6 py-5 text-center">
+                <h3 className="text-xl font-bold text-white">Write a Review</h3>
+                <p className="text-gray-400 text-sm mt-1">Share your experience with our products</p>
+              </div>
+              {reviewSubmitted ? (
+                <div className="px-6 py-10 text-center">
+                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                    <span className="material-symbols-outlined text-3xl text-primary">check_circle</span>
+                  </div>
+                  <h4 className="text-lg font-bold text-slate-900 mb-2">Thank You!</h4>
+                  <p className="text-sm text-slate-500 mb-6">Your review has been submitted and will appear after approval.</p>
+                  <button onClick={() => setShowReviewModal(false)} className="px-6 py-2.5 rounded-lg bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors">
+                    Close
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleReviewSubmit} className="px-6 py-6 space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">Your Name *</label>
+                      <input
+                        type="text"
+                        value={reviewForm.name}
+                        onChange={(e) => setReviewForm({ ...reviewForm, name: e.target.value })}
+                        placeholder="e.g. Priya Sharma"
+                        required
+                        className="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">Your Role / Title</label>
+                      <input
+                        type="text"
+                        value={reviewForm.role}
+                        onChange={(e) => setReviewForm({ ...reviewForm, role: e.target.value })}
+                        placeholder="e.g. Interior Designer"
+                        className="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-1">Your Review *</label>
+                    <textarea
+                      value={reviewForm.text}
+                      onChange={(e) => setReviewForm({ ...reviewForm, text: e.target.value })}
+                      placeholder="Tell us about your experience..."
+                      required
+                      rows={4}
+                      className="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm resize-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-1">Rating *</label>
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setReviewForm({ ...reviewForm, rating: star })}
+                          className="p-0.5"
+                        >
+                          <span
+                            className="material-symbols-outlined text-2xl text-accent-gold cursor-pointer"
+                            style={{ fontVariationSettings: star <= reviewForm.rating ? "'FILL' 1" : "'FILL' 0" }}
+                          >star</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex gap-3 pt-2">
+                    <button type="button" onClick={() => setShowReviewModal(false)} className="flex-1 px-4 py-2.5 rounded-lg border border-gray-300 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors">
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={reviewSubmitting}
+                      className="flex-1 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                      {reviewSubmitting ? (
+                        <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Submitting...</>
+                      ) : (
+                        <><span className="material-symbols-outlined text-lg">send</span> Submit Review</>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Newsletter */}
       <section className="py-20 border-t border-slate-200 bg-white">

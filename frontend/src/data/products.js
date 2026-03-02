@@ -9,7 +9,7 @@ export const staticProducts = [
     longDescription: 'This exquisite hand-knotted silk rug represents the pinnacle of Persian craftsmanship. Each piece takes over 6 months to complete, with artisans tying over 400 knots per square inch.',
     basePrice: 45999,
     originalPrice: 59999,
-    currency: '₹',
+    currency: '$',
     category: 'Persian',
     collection: 'Persian Heritage',
     tags: ['silk', 'hand-knotted', 'persian', 'luxury', 'bestseller'],
@@ -66,7 +66,7 @@ export const staticProducts = [
     details: {
       productDetails: 'Material: 100% Pure Silk\nWeave: Hand-Knotted (400+ knots/sq inch)\nPile Height: 6mm\nBacking: Cotton\nOrigin: Kashmir, India\nPattern: Floral Medallion\nEdge: Hand-bound serging\nCertification: Ethically sourced',
       washingCare: 'Professional dry cleaning recommended\nVacuum regularly with suction only (no beater bar)\nRotate rug every 6 months for even wear\nBlot spills immediately with clean white cloth\nAvoid direct sunlight to prevent fading\nUse rug pad on hard floors',
-      shippingReturns: 'Free shipping on all orders above ₹10,000\nDelivery within 5-7 business days (metro cities)\n10-14 business days for remote locations\n15-day return policy for unused items\nFree pickup for returns\nCustom orders are non-returnable',
+      shippingReturns: 'Free shipping on all orders above $10,000\nDelivery within 5-7 business days (metro cities)\n10-14 business days for remote locations\n15-day return policy for unused items\nFree pickup for returns\nCustom orders are non-returnable',
       aboutDesign: 'The Maharaja Persian Silk Rug draws inspiration from the royal gardens of 16th-century Persia. The central medallion represents the sun, surrounded by intricate floral arabesques symbolizing paradise.'
     },
     deliveryTimeline: '5-7 business days',
@@ -85,7 +85,7 @@ export const staticProducts = [
     longDescription: 'The Zenith rug brings contemporary elegance to any space with its abstract geometric pattern.',
     basePrice: 32999,
     originalPrice: 42999,
-    currency: '₹',
+    currency: '$',
     category: 'Modern',
     collection: 'Modern Minimalist',
     tags: ['wool', 'hand-tufted', 'modern', 'geometric', 'new-arrival'],
@@ -140,7 +140,7 @@ export const staticProducts = [
     details: {
       productDetails: 'Material: 100% New Zealand Wool\nWeave: Hand-Tufted\nPile Height: 12mm\nBacking: Canvas with latex\nOrigin: Bhadohi, India\nPattern: Geometric Abstract',
       washingCare: 'Professional cleaning recommended annually\nVacuum regularly in the direction of the pile\nBlot spills immediately\nAvoid steam cleaning',
-      shippingReturns: 'Free shipping on all orders above ₹10,000\nDelivery within 5-7 business days\n15-day return policy\nFree pickup for returns',
+      shippingReturns: 'Free shipping on all orders above $10,000\nDelivery within 5-7 business days\n15-day return policy\nFree pickup for returns',
       aboutDesign: 'The Zenith rug is a celebration of modern design principles with geometric abstract patterns inspired by architectural forms.'
     },
     deliveryTimeline: '5-7 business days',
@@ -159,7 +159,7 @@ export const staticProducts = [
     longDescription: 'Each Nomad Kilim tells a story through its tribal motifs and vibrant colors.',
     basePrice: 18999,
     originalPrice: 24999,
-    currency: '₹',
+    currency: '$',
     category: 'Bohemian',
     collection: 'Bohemian Rhapsody',
     tags: ['kilim', 'flatweave', 'bohemian', 'tribal', 'colorful'],
@@ -202,7 +202,7 @@ export const staticProducts = [
     details: {
       productDetails: 'Material: 80% Wool, 20% Cotton\nWeave: Flatweave (Kilim)\nPile Height: 3mm\nBacking: None (reversible)\nOrigin: Rajasthan, India',
       washingCare: 'Spot clean with mild detergent\nProfessional cleaning for deep stains\nVacuum both sides regularly',
-      shippingReturns: 'Free shipping on all orders above ₹10,000\nDelivery within 5-7 business days\n15-day return policy',
+      shippingReturns: 'Free shipping on all orders above $10,000\nDelivery within 5-7 business days\n15-day return policy',
       aboutDesign: 'The Nomad Kilim draws from centuries-old tribal weaving traditions of Rajasthan.'
     },
     deliveryTimeline: '3-5 business days',
@@ -221,7 +221,7 @@ export const staticProducts = [
     longDescription: 'Inspired by the legendary gardens of the Mughal emperors.',
     basePrice: 78999,
     originalPrice: 99999,
-    currency: '₹',
+    currency: '$',
     category: 'Traditional',
     collection: 'Royal Mughal',
     tags: ['silk-wool', 'hand-knotted', 'mughal', 'luxury', 'gold-accent'],
@@ -283,7 +283,7 @@ export const staticProducts = [
     longDescription: 'Bring the relaxed beauty of coastal living into your home.',
     basePrice: 14999,
     originalPrice: 19999,
-    currency: '₹',
+    currency: '$',
     category: 'Natural',
     collection: 'Coastal Breeze',
     tags: ['jute', 'braided', 'natural', 'coastal', 'eco-friendly'],
@@ -326,7 +326,7 @@ export const staticProducts = [
     details: {
       productDetails: 'Material: 100% Natural Jute\nWeave: Hand-Braided\nPile Height: 5mm\nOrigin: West Bengal, India',
       washingCare: 'Vacuum regularly\nSpot clean with damp cloth\nAvoid excessive moisture',
-      shippingReturns: 'Free shipping on all orders above ₹10,000\nDelivery within 3-5 business days',
+      shippingReturns: 'Free shipping on all orders above $10,000\nDelivery within 3-5 business days',
       aboutDesign: 'The Coastal Jute rug celebrates the beauty of natural materials.'
     },
     deliveryTimeline: '3-5 business days',
@@ -345,7 +345,7 @@ export const staticProducts = [
     longDescription: 'Each Vintage Overdyed rug begins as an authentic Turkish rug, then undergoes a meticulous overdyeing process.',
     basePrice: 54999,
     originalPrice: 69999,
-    currency: '₹',
+    currency: '$',
     category: 'Vintage',
     collection: 'Vintage Revival',
     tags: ['vintage', 'overdyed', 'turkish', 'unique', 'one-of-a-kind'],

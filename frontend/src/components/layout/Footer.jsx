@@ -15,7 +15,8 @@ export default function Footer() {
     });
   }, []);
 
-  const { whatsappNumber, contactEmail } = settings;
+  const whatsappNumber = (settings.whatsappNumber || '').replace(/[^0-9]/g, '');
+  const contactEmail = settings.contactEmail || '';
 
   return (
     <footer className="bg-[#051109] text-white pt-12 sm:pt-20 pb-8 sm:pb-10 border-t border-white/10">

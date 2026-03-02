@@ -23,7 +23,10 @@ export default function AdminPage() {
   const [tab, setTab] = useState('list'); // 'list' | 'add' | 'settings' | 'reviews'
   const [allReviews, setAllReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [reviewForm, setReviewForm] = useState({ name: '', role: '', text: '', rating: 5 });
+  const [reviewSaving, setReviewSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null); // null or product object
 
   // Contact settings state
   const [contactSettings, setContactSettings] = useState(getCachedSettings());
@@ -147,6 +150,25 @@ export default function AdminPage() {
     loadReviews();
   };
 
+  const handleAddReview = async (e) => {
+    e.preventDefault();
+    if (!reviewForm.name || !reviewForm.text || !reviewForm.rating) {
+      setError('Name, review text, and rating are required.');
+      return;
+    }
+    setReviewSaving(true);
+    const result = await api.adminCreateReview(reviewForm);
+    setReviewSaving(false);
+    if (result && result._id) {
+      setSuccess(`Review by "${result.name}" added and approved!`);
+      setReviewForm({ name: '', role: '', text: '', rating: 5 });
+      loadReviews();
+      setTimeout(() => setSuccess(''), 4000);
+    } else {
+      setError('Failed to add review.');
+    }
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
       loadProducts();
@@ -174,6 +196,7 @@ export default function AdminPage() {
       size3Label: '', size3Price: '', size3Stock: '',
       detailsProduct: '', detailsCare: '', detailsShipping: '', detailsDesign: '',
     });
+    setEditingProduct(null);
   };
 
   const handleChange = (e) => {
@@ -274,17 +297,25 @@ export default function AdminPage() {
       },
     };
 
-    const result = await api.createProduct(productData);
+    let result;
+    if (editingProduct && isDbProduct(editingProduct)) {
+      result = await api.updateProduct(editingProduct._id, productData);
+    } else {
+      result = await api.createProduct(productData);
+    }
 
     if (result && result._id) {
-      setSuccess(`"${result.name}" has been added successfully! It will now appear on the homepage.`);
+      setSuccess(editingProduct
+        ? `"${result.name}" has been updated successfully!`
+        : `"${result.name}" has been added successfully! It will now appear on the homepage.`
+      );
       resetForm();
       loadProducts();
       setTab('list');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       setTimeout(() => setSuccess(''), 6000);
     } else {
-      setError('Failed to add product. Make sure the backend is running.');
+      setError(editingProduct ? 'Failed to update product.' : 'Failed to add product. Make sure the backend is running.');
     }
 
     setSaving(false);
@@ -300,6 +331,49 @@ export default function AdminPage() {
     } else {
       setError('Failed to delete. Make sure the backend is running.');
     }
+  };
+
+  const isDbProduct = (p) => p._id && /^[a-f0-9]{24}$/i.test(p._id);
+
+  const handleEdit = (product) => {
+    const v = product.variants?.[0];
+    const sizes = v?.sizes || [];
+    setForm({
+      name: product.name || '',
+      sku: product.sku || '',
+      shortDescription: product.shortDescription || '',
+      longDescription: product.longDescription || '',
+      basePrice: product.basePrice || '',
+      originalPrice: product.originalPrice || '',
+      category: product.category || '',
+      collection: product.collection || '',
+      tags: (product.tags || []).join(', '),
+      material: product.material || '',
+      weaveType: product.weaveType || '',
+      origin: product.origin || '',
+      deliveryTimeline: product.deliveryTimeline || '5-7 business days',
+      isFeatured: product.isFeatured || false,
+      isNewArrival: product.isNewArrival || false,
+      isBestseller: product.isBestseller || false,
+      imageUrl1: product.images?.[0] || '',
+      imageUrl2: product.images?.[1] || '',
+      imageUrl3: product.images?.[2] || '',
+      imageUrl4: product.images?.[3] || '',
+      colorName: v?.color?.name || '',
+      colorHex: v?.color?.hex || '#000000',
+      size1Label: sizes[0]?.label || '', size1Price: sizes[0]?.price || '', size1Stock: sizes[0]?.stock || '',
+      size2Label: sizes[1]?.label || '', size2Price: sizes[1]?.price || '', size2Stock: sizes[1]?.stock || '',
+      size3Label: sizes[2]?.label || '', size3Price: sizes[2]?.price || '', size3Stock: sizes[2]?.stock || '',
+      detailsProduct: product.details?.productDetails || '',
+      detailsCare: product.details?.washingCare || '',
+      detailsShipping: product.details?.shippingReturns || '',
+      detailsDesign: product.details?.aboutDesign || '',
+    });
+    setEditingProduct(product);
+    setTab('add');
+    setError('');
+    setSuccess('');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // ===== LOGIN GATE =====
@@ -410,13 +484,13 @@ export default function AdminPage() {
             All Products ({products.length})
           </button>
           <button
-            onClick={() => { setTab('add'); setError(''); setSuccess(''); }}
+            onClick={() => { setTab('add'); setError(''); setSuccess(''); if (!editingProduct) resetForm(); }}
             className={`px-5 py-2.5 rounded-md text-sm font-bold transition-all flex items-center gap-2 ${
               tab === 'add' ? 'bg-white text-slate-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            <span className="material-symbols-outlined text-lg">add_circle</span>
-            Add New Rug
+            <span className="material-symbols-outlined text-lg">{editingProduct ? 'edit' : 'add_circle'}</span>
+            {editingProduct ? 'Edit Product' : 'Add New Rug'}
           </button>
           <button
             onClick={() => { setTab('reviews'); setError(''); setSuccess(''); loadReviews(); }}
@@ -514,6 +588,13 @@ export default function AdminPage() {
                             <Link to={`/product/${p.slug}`} className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-primary transition-colors" title="View">
                               <span className="material-symbols-outlined text-lg">visibility</span>
                             </Link>
+                            <button
+                              onClick={() => handleEdit(p)}
+                              className="p-2 rounded-lg hover:bg-blue-50 text-gray-500 hover:text-blue-600 transition-colors"
+                              title="Edit"
+                            >
+                              <span className="material-symbols-outlined text-lg">edit</span>
+                            </button>
                             <button
                               onClick={() => handleDelete(p._id, p.name)}
                               className="p-2 rounded-lg hover:bg-red-50 text-gray-500 hover:text-red-600 transition-colors"
@@ -617,12 +698,12 @@ export default function AdminPage() {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1.5">Base Price (₹) *</label>
+                  <label className="block text-sm font-bold text-slate-700 mb-1.5">Base Price ($) *</label>
                   <input name="basePrice" type="number" value={form.basePrice} onChange={handleChange} required placeholder="45999"
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm" />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1.5">Original Price (₹)</label>
+                  <label className="block text-sm font-bold text-slate-700 mb-1.5">Original Price ($)</label>
                   <input name="originalPrice" type="number" value={form.originalPrice} onChange={handleChange} placeholder="59999"
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm" />
                 </div>
@@ -736,7 +817,7 @@ export default function AdminPage() {
                         className="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm" />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 mb-1">Price (₹)</label>
+                      <label className="block text-xs font-bold text-slate-500 mb-1">Price ($)</label>
                       <input name={`size${n}Price`} type="number" value={form[`size${n}Price`]} onChange={handleChange} placeholder="45999"
                         className="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm" />
                     </div>
@@ -782,6 +863,11 @@ export default function AdminPage() {
 
             {/* Submit */}
             <div className="flex items-center justify-end gap-4 pb-8">
+              {editingProduct && (
+                <button type="button" onClick={() => { resetForm(); }} className="px-6 py-3 rounded-lg border border-gray-300 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors">
+                  Cancel Edit
+                </button>
+              )}
               <button type="button" onClick={resetForm} className="px-6 py-3 rounded-lg border border-gray-300 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors">
                 Reset Form
               </button>
@@ -794,6 +880,11 @@ export default function AdminPage() {
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     Saving...
+                  </>
+                ) : editingProduct ? (
+                  <>
+                    <span className="material-symbols-outlined text-lg">save</span>
+                    Update Product
                   </>
                 ) : (
                   <>
@@ -812,6 +903,85 @@ export default function AdminPage() {
               <span className="material-symbols-outlined text-primary">reviews</span>
               Manage Customer Reviews
             </h2>
+
+            {/* Add Review Form */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6 mb-8">
+              <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-lg">add_circle</span>
+                Add New Testimonial
+              </h3>
+              <form onSubmit={handleAddReview} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-1">Name *</label>
+                    <input
+                      type="text"
+                      value={reviewForm.name}
+                      onChange={(e) => setReviewForm({ ...reviewForm, name: e.target.value })}
+                      placeholder="e.g. Priya Sharma"
+                      required
+                      className="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-1">Role / Title</label>
+                    <input
+                      type="text"
+                      value={reviewForm.role}
+                      onChange={(e) => setReviewForm({ ...reviewForm, role: e.target.value })}
+                      placeholder="e.g. Interior Designer"
+                      className="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Review Text *</label>
+                  <textarea
+                    value={reviewForm.text}
+                    onChange={(e) => setReviewForm({ ...reviewForm, text: e.target.value })}
+                    placeholder="Write the testimonial text..."
+                    required
+                    rows={3}
+                    className="w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm resize-none"
+                  />
+                </div>
+                <div className="flex items-center gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 mb-1">Rating *</label>
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setReviewForm({ ...reviewForm, rating: star })}
+                          className="p-0.5"
+                        >
+                          <span
+                            className="material-symbols-outlined text-2xl text-accent-gold cursor-pointer"
+                            style={{ fontVariationSettings: star <= reviewForm.rating ? "'FILL' 1" : "'FILL' 0" }}
+                          >star</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="ml-auto">
+                    <button
+                      type="submit"
+                      disabled={reviewSaving}
+                      className="px-6 py-2.5 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-bold transition-all shadow-lg shadow-primary/20 flex items-center gap-2 disabled:opacity-50"
+                    >
+                      {reviewSaving ? (
+                        <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Adding...</>
+                      ) : (
+                        <><span className="material-symbols-outlined text-lg">add</span> Add Review</>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </form>
+              <p className="text-xs text-gray-400 mt-3">Reviews added here are automatically approved and will appear on the homepage testimonials section.</p>
+            </div>
+
             {reviewsLoading ? (
               <div className="text-center py-12">
                 <span className="material-symbols-outlined text-4xl text-gray-300 animate-spin block mb-2">progress_activity</span>

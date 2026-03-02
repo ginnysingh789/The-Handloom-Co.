@@ -31,6 +31,11 @@ export const api = {
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getAuthToken()}` },
     body: JSON.stringify(data),
   }),
+  updateProduct: (id, data) => fetchApi(`/products/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getAuthToken()}` },
+    body: JSON.stringify(data),
+  }),
   deleteProduct: (id) => fetchApi(`/products/${id}`, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getAuthToken()}` },
@@ -106,6 +111,11 @@ export const api = {
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getAuthToken()}` },
   }),
   submitReview: (data) => fetchApi('/reviews', { method: 'POST', body: JSON.stringify(data) }),
+  adminCreateReview: (data) => fetchApi('/reviews/admin', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getAuthToken()}` },
+    body: JSON.stringify(data),
+  }),
   approveReview: (id) => fetchApi(`/reviews/${id}/approve`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getAuthToken()}` },
@@ -130,18 +140,19 @@ export function getSessionId() {
 }
 
 export function formatPrice(price) {
-  return '₹' + price.toLocaleString('en-IN');
+  return '$' + price.toLocaleString('en-US');
 }
 
 export function generateWhatsAppLink(product, variant, size) {
   const { whatsappNumber } = getCachedSettings();
+  const cleanNum = (whatsappNumber || '').replace(/[^0-9]/g, '');
   const text = encodeURIComponent(
     `Hi! I'm interested in the ${product.name}\n` +
     `Color: ${variant?.color?.name || 'N/A'}\n` +
     `Size: ${size?.label || 'N/A'}\n` +
-    `Price: ₹${size?.price?.toLocaleString('en-IN') || product.basePrice.toLocaleString('en-IN')}\n` +
+    `Price: $${size?.price?.toLocaleString('en-US') || product.basePrice.toLocaleString('en-US')}\n` +
     `SKU: ${product.sku}\n\n` +
     `Could you help me with more details?`
   );
-  return `https://wa.me/${whatsappNumber}?text=${text}`;
+  return `https://wa.me/${cleanNum}?text=${text}`;
 }

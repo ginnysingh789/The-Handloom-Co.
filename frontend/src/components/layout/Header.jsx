@@ -29,7 +29,7 @@ export default function Header() {
         </Link>
 
         {/* Desktop Menu */}
-        <nav className="hidden md:flex items-center gap-10">
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-10">
           {navLinks.map((link) => (
             <Link
               key={link.to}
@@ -78,7 +78,7 @@ export default function Header() {
             )}
           </button>
           <button
-            className="md:hidden p-2 hover:bg-primary/10 rounded-full transition-colors text-slate-700"
+            className="lg:hidden p-2 hover:bg-primary/10 rounded-full transition-colors text-slate-700"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
             <span className="material-symbols-outlined">{mobileOpen ? 'close' : 'menu'}</span>
@@ -94,7 +94,7 @@ export default function Header() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden overflow-hidden border-t border-[#e7f3eb]"
+            className="lg:hidden overflow-hidden border-t border-[#e7f3eb]"
           >
             <nav className="px-6 py-4 flex flex-col gap-3 bg-white">
               {navLinks.map((link) => (

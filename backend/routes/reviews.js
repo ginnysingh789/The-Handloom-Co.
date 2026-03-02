@@ -38,6 +38,21 @@ router.post('/', async (req, res) => {
   }
 });
 
+// POST /api/reviews/admin — admin: create a pre-approved review
+router.post('/admin', requireAuth, async (req, res) => {
+  try {
+    const { name, role, text, rating } = req.body;
+    if (!name || !text || !rating) {
+      return res.status(400).json({ error: 'Name, text, and rating are required.' });
+    }
+    const review = new Review({ name, role, text, rating: Number(rating), approved: true });
+    await review.save();
+    res.status(201).json(review);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // PUT /api/reviews/:id/approve — admin: approve a review
 router.put('/:id/approve', requireAuth, async (req, res) => {
   try {
