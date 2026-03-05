@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { api, formatPrice, generateWhatsAppLink } from '../utils/api';
+import { api, formatPrice } from '../utils/api';
 import { staticProducts, staticAddons } from '../data/products';
 import { useCart } from '../context/CartContext';
+import { getCachedSettings } from '../utils/contactConfig';
 
 export default function ProductDetailPage() {
   const { slug } = useParams();
@@ -13,6 +14,7 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState(null);
   const [addons, setAddons] = useState(staticAddons);
   const [loading, setLoading] = useState(true);
+  const [waNumbers, setWaNumbers] = useState([]);
 
   // Selection state
   const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
@@ -47,6 +49,7 @@ export default function ProductDetailPage() {
       setLoading(false);
     }
     load();
+    api.getWhatsAppNumbers().then(d => { if (d) setWaNumbers(d); });
   }, [slug]);
 
   // Reset selections when product changes
@@ -73,6 +76,28 @@ export default function ProductDetailPage() {
 
   const totalPrice = (currentPrice + addonTotal) * quantity;
 
+  // Build WhatsApp link using product-specific number or global fallback
+  const getProductWhatsAppLink = () => {
+    let waNum = '';
+    if (product?.whatsappNumberId && waNumbers.length > 0) {
+      const assigned = waNumbers.find(w => w._id === product.whatsappNumberId);
+      if (assigned) waNum = assigned.number;
+    }
+    if (!waNum) {
+      const { whatsappNumber } = getCachedSettings();
+      waNum = (whatsappNumber || '').replace(/[^0-9]/g, '');
+    }
+    const text = encodeURIComponent(
+      `Hi! I'm interested in the ${product?.name}\n` +
+      `Color: ${variant?.color?.name || 'N/A'}\n` +
+      `Size: ${size?.label || 'N/A'}\n` +
+      `Price: ${formatPrice(currentPrice)}\n` +
+      `SKU: ${product?.sku}\n\n` +
+      `Could you help me with more details?`
+    );
+    return `https://wa.me/${waNum}?text=${text}`;
+  };
+
   // Handlers
   const handleVariantChange = (idx) => {
     setSelectedVariantIdx(idx);
@@ -93,6 +118,7 @@ export default function ProductDetailPage() {
       return { name: a?.name, price: a?.price };
     });
 
+    const productImage = currentImages?.[0] || product?.images?.[0] || '';
     await addToCart(
       product._id,
       product.name,
@@ -102,7 +128,9 @@ export default function ProductDetailPage() {
         price: currentPrice
       },
       quantity,
-      addonItems
+      addonItems,
+      productImage,
+      product.whatsappNumberId || ''
     );
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2000);
@@ -180,19 +208,11 @@ export default function ProductDetailPage() {
               <div
                 ref={mainImageRef}
                 className="flex-1 w-full bg-[#f0f4f1] rounded-xl overflow-hidden relative group aspect-square sm:aspect-[4/5] lg:aspect-auto lg:h-[600px]"
-                onMouseEnter={() => setIsZooming(true)}
-                onMouseLeave={() => setIsZooming(false)}
-                onMouseMove={handleMouseMove}
               >
                 <img
                   src={currentImages[activeImageIdx]}
                   alt={product.name}
                   className="w-full h-full object-cover"
-                  style={{
-                    transition: 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                    transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
-                    transform: isZooming ? 'scale(1.5)' : 'scale(1)',
-                  }}
                 />
                 <button
                   onClick={(e) => { e.stopPropagation(); setIsFavorited(!isFavorited); }}
@@ -215,7 +235,7 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="flex items-center gap-3 mb-2 sm:mb-3">
                   <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-forest-dark tracking-tight">{product.name}</h1>
-                  <img src="/logo.png" alt="World Weave Carpets" className="h-8 w-8 sm:h-10 sm:w-10 object-contain opacity-60" />
+                  <img src="/logo.png" alt="World Weave Carpets" className="h-12 w-12 sm:h-14 sm:w-14 object-contain drop-shadow-md" />
                 </div>
                 <p className="text-xl sm:text-2xl font-semibold text-primary">{formatPrice(currentPrice)}</p>
                 {product.rating > 0 && (
@@ -253,30 +273,6 @@ export default function ProductDetailPage() {
 
               {/* Selectors */}
               <div className="flex flex-col gap-6">
-                {/* Colors */}
-                {product.variants?.length > 1 && (
-                  <div>
-                    <span className="text-sm font-bold text-forest-dark block mb-3">
-                      Select Color: <span className="font-normal text-gray-500">{variant?.color?.name}</span>
-                    </span>
-                    <div className="flex gap-3">
-                      {product.variants.map((v, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => handleVariantChange(idx)}
-                          aria-label={v.color.name}
-                          className={`w-10 h-10 rounded-full border-2 shadow-sm transition-transform hover:scale-110 ${
-                            selectedVariantIdx === idx
-                              ? 'border-primary ring-2 ring-primary/30'
-                              : 'border-transparent hover:border-gray-300'
-                          }`}
-                          style={{ backgroundColor: v.color.hex }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
                 {/* Sizes */}
                 <div>
                   <div className="flex justify-between items-center mb-3">
@@ -313,11 +309,11 @@ export default function ProductDetailPage() {
                       : 'bg-primary hover:bg-primary/90 text-white hover:shadow-primary/30'
                   }`}
                 >
-                  <span className="material-symbols-outlined">{addedToCart ? 'check_circle' : 'shopping_cart'}</span>
-                  {addedToCart ? 'Added to Cart!' : `Add to Cart - ${formatPrice(totalPrice)}`}
+                  <span className="material-symbols-outlined">{addedToCart ? 'check_circle' : 'favorite'}</span>
+                  {addedToCart ? 'Added to Wishlist!' : `Add to Wishlist - ${formatPrice(totalPrice)}`}
                 </motion.button>
                 <a
-                  href={generateWhatsAppLink(product, variant, size)}
+                  href={getProductWhatsAppLink()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full h-12 border border-primary text-primary hover:bg-primary/5 rounded-lg text-sm font-bold tracking-wide transition-all flex items-center justify-center gap-2"
@@ -327,7 +323,7 @@ export default function ProductDetailPage() {
                 </a>
                 <p className="text-center text-xs text-gray-400 mt-2">
                   <span className="material-symbols-outlined align-middle text-sm mr-1">local_shipping</span>
-                  Free shipping worldwide on orders over $1,000
+                  Free shipping worldwide on orders over $200
                 </p>
               </div>
 
@@ -389,7 +385,7 @@ export default function ProductDetailPage() {
                       ))
                     ) : (
                       <div className="space-y-2">
-                        <p>Free shipping on all orders above ₹10,000.</p>
+                        <p>Free shipping on all orders above $200.</p>
                         <p>Standard delivery: 7-14 business days.</p>
                         <p>Express delivery: 3-5 business days (additional charges apply).</p>
                         <p>Returns accepted within 7 days of delivery for unused items in original packaging.</p>

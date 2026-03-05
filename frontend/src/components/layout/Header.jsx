@@ -68,7 +68,7 @@ export default function Header() {
             className="p-2 hover:bg-primary/10 rounded-full transition-colors text-slate-700 relative"
             onClick={() => setIsCartOpen(true)}
           >
-            <span className="material-symbols-outlined">shopping_bag</span>
+            <span className="material-symbols-outlined">favorite</span>
             {cartCount > 0 && (
               <motion.span
                 initial={{ scale: 0 }}

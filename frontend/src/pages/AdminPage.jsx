@@ -33,6 +33,11 @@ export default function AdminPage() {
   const [settingsLoading, setSettingsLoading] = useState(false);
   const [settingsSaved, setSettingsSaved] = useState(false);
 
+  // WhatsApp numbers state
+  const [waNumbers, setWaNumbers] = useState([]);
+  const [waForm, setWaForm] = useState({ label: '', country: '', number: '', isDefault: false });
+  const [waSaving, setWaSaving] = useState(false);
+
   // Form state
   const [form, setForm] = useState({
     name: '',
@@ -70,6 +75,7 @@ export default function AdminPage() {
     detailsCare: '',
     detailsShipping: '',
     detailsDesign: '',
+    whatsappNumberId: '',
   });
 
   // Verify existing token on mount
@@ -169,9 +175,15 @@ export default function AdminPage() {
     }
   };
 
+  const loadWaNumbers = async () => {
+    const data = await api.getWhatsAppNumbers();
+    if (data) setWaNumbers(data);
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
       loadProducts();
+      loadWaNumbers();
       // Load settings from DB
       api.getSettings().then((data) => {
         if (data && data.whatsappNumber) {
@@ -195,6 +207,7 @@ export default function AdminPage() {
       size2Label: '', size2Price: '', size2Stock: '',
       size3Label: '', size3Price: '', size3Stock: '',
       detailsProduct: '', detailsCare: '', detailsShipping: '', detailsDesign: '',
+      whatsappNumberId: '',
     });
     setEditingProduct(null);
   };
@@ -295,6 +308,7 @@ export default function AdminPage() {
         shippingReturns: form.detailsShipping,
         aboutDesign: form.detailsDesign,
       },
+      whatsappNumberId: form.whatsappNumberId || null,
     };
 
     let result;
@@ -368,6 +382,7 @@ export default function AdminPage() {
       detailsCare: product.details?.washingCare || '',
       detailsShipping: product.details?.shippingReturns || '',
       detailsDesign: product.details?.aboutDesign || '',
+      whatsappNumberId: product.whatsappNumberId || '',
     });
     setEditingProduct(product);
     setTab('add');
@@ -861,6 +876,31 @@ export default function AdminPage() {
               </div>
             </div>
 
+            {/* WhatsApp Inquiry Routing */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#25D366] text-lg">chat</span>
+                WhatsApp Inquiry Routing
+              </h3>
+              <p className="text-xs text-gray-500 mb-3">Select which WhatsApp number receives inquiries for this rug.</p>
+              <select
+                name="whatsappNumberId"
+                value={form.whatsappNumberId}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-sm"
+              >
+                <option value="">Default (global setting)</option>
+                {waNumbers.map((wa) => (
+                  <option key={wa._id} value={wa._id}>
+                    {wa.label} — {wa.country} ({wa.number})
+                  </option>
+                ))}
+              </select>
+              {waNumbers.length === 0 && (
+                <p className="text-xs text-amber-600 mt-2">No WhatsApp numbers added yet. Go to Settings → WhatsApp Numbers to add them.</p>
+              )}
+            </div>
+
             {/* Submit */}
             <div className="flex items-center justify-end gap-4 pb-8">
               {editingProduct && (
@@ -1172,6 +1212,95 @@ export default function AdminPage() {
                   </a>
                 </div>
               </div>
+            </div>
+
+            {/* WhatsApp Numbers Management */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6 md:p-8 mt-6">
+              <h3 className="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#25D366]">chat</span>
+                WhatsApp Numbers
+              </h3>
+              <p className="text-sm text-gray-500 mb-6">Add multiple WhatsApp numbers for different countries. Assign them to specific rugs so inquiries go to the right person.</p>
+
+              {/* Add New Number Form */}
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                if (!waForm.label || !waForm.country || !waForm.number) { setError('All fields are required.'); return; }
+                setWaSaving(true);
+                const result = await api.createWhatsAppNumber(waForm);
+                setWaSaving(false);
+                if (result && result._id) {
+                  setWaForm({ label: '', country: '', number: '', isDefault: false });
+                  loadWaNumbers();
+                  setSuccess('WhatsApp number added!');
+                  setTimeout(() => setSuccess(''), 3000);
+                } else {
+                  setError('Failed to add number.');
+                }
+              }} className="bg-gray-50 rounded-lg p-4 mb-6 space-y-3">
+                <p className="text-xs font-bold text-slate-700 uppercase tracking-wider">Add New Number</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <input
+                    type="text" placeholder="Label (e.g. Sales India)"
+                    value={waForm.label} onChange={(e) => setWaForm({ ...waForm, label: e.target.value })}
+                    className="px-3 py-2.5 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm"
+                  />
+                  <input
+                    type="text" placeholder="Country (e.g. India)"
+                    value={waForm.country} onChange={(e) => setWaForm({ ...waForm, country: e.target.value })}
+                    className="px-3 py-2.5 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm"
+                  />
+                  <input
+                    type="text" placeholder="Number (e.g. 919876543210)"
+                    value={waForm.number} onChange={(e) => setWaForm({ ...waForm, number: e.target.value })}
+                    className="px-3 py-2.5 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm"
+                  />
+                </div>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                    <input type="checkbox" checked={waForm.isDefault} onChange={(e) => setWaForm({ ...waForm, isDefault: e.target.checked })} className="accent-primary" />
+                    Set as default
+                  </label>
+                  <button type="submit" disabled={waSaving} className="ml-auto px-5 py-2 rounded-lg bg-[#25D366] hover:bg-[#1fb855] text-white text-sm font-bold transition-all flex items-center gap-2 disabled:opacity-50">
+                    {waSaving ? 'Adding...' : <><span className="material-symbols-outlined text-sm">add</span> Add Number</>}
+                  </button>
+                </div>
+              </form>
+
+              {/* Existing Numbers List */}
+              {waNumbers.length === 0 ? (
+                <div className="text-center py-8 text-gray-400">
+                  <span className="material-symbols-outlined text-4xl block mb-2">phone_disabled</span>
+                  <p className="text-sm">No WhatsApp numbers added yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {waNumbers.map((wa) => (
+                    <div key={wa._id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg border border-gray-100">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-bold text-slate-800">{wa.label}</p>
+                          {wa.isDefault && <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/10 text-primary">Default</span>}
+                        </div>
+                        <p className="text-xs text-gray-500 mt-0.5">{wa.country} · {wa.number}</p>
+                      </div>
+                      <a href={`https://wa.me/${wa.number}`} target="_blank" rel="noopener noreferrer"
+                        className="px-3 py-1.5 rounded-lg bg-[#25D366]/10 text-[#25D366] text-xs font-bold hover:bg-[#25D366]/20 transition-colors flex items-center gap-1">
+                        <span className="material-symbols-outlined text-sm">chat</span> Test
+                      </a>
+                      <button onClick={async () => {
+                        if (!window.confirm(`Delete "${wa.label}"?`)) return;
+                        await api.deleteWhatsAppNumber(wa._id);
+                        loadWaNumbers();
+                        setSuccess('Number deleted.');
+                        setTimeout(() => setSuccess(''), 3000);
+                      }} className="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-xs font-bold hover:bg-red-100 transition-colors flex items-center gap-1">
+                        <span className="material-symbols-outlined text-sm">delete</span> Delete
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}

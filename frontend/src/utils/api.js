@@ -128,6 +128,23 @@ export const api = {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getAuthToken()}` },
   }),
+
+  // WhatsApp Numbers
+  getWhatsAppNumbers: () => fetchApi('/whatsapp-numbers'),
+  createWhatsAppNumber: (data) => fetchApi('/whatsapp-numbers', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getAuthToken()}` },
+    body: JSON.stringify(data),
+  }),
+  updateWhatsAppNumber: (id, data) => fetchApi(`/whatsapp-numbers/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getAuthToken()}` },
+    body: JSON.stringify(data),
+  }),
+  deleteWhatsAppNumber: (id) => fetchApi(`/whatsapp-numbers/${id}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getAuthToken()}` },
+  }),
 };
 
 export function getSessionId() {

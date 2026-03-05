@@ -14,6 +14,7 @@ const reviewRoutes = require('./routes/reviews');
 const uploadRoutes = require('./routes/upload');
 const adminRoutes = require('./routes/admin');
 const settingsRoutes = require('./routes/settings');
+const whatsappNumberRoutes = require('./routes/whatsappNumbers');
 const { requireAuth } = require('./middleware/auth');
 
 const app = express();
@@ -70,6 +71,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/upload', requireAuth, uploadRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/whatsapp-numbers', whatsappNumberRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

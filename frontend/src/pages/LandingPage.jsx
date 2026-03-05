@@ -34,6 +34,7 @@ export default function LandingPage() {
     e.stopPropagation();
     const variant = product.variants?.[0];
     const size = variant?.sizes?.[0];
+    const productImage = variant?.color?.images?.[0] || product?.images?.[0] || '';
     addToCart(
       product._id,
       product.name,
@@ -43,7 +44,8 @@ export default function LandingPage() {
         price: size?.price || product.basePrice,
       },
       1,
-      []
+      [],
+      productImage
     );
   };
 
@@ -255,7 +257,7 @@ export default function LandingPage() {
                       onClick={(e) => handleQuickAdd(e, product)}
                       className="absolute bottom-4 right-4 bg-white text-slate-900 p-3 rounded-full shadow-lg opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 hover:bg-primary hover:text-white z-10"
                     >
-                      <span className="material-symbols-outlined text-xl">add_shopping_cart</span>
+                      <span className="material-symbols-outlined text-xl">favorite</span>
                     </button>
                     {/* Eco badge */}
                     <span className="absolute top-3 right-3 z-10 bg-primary/90 backdrop-blur text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded flex items-center gap-1">

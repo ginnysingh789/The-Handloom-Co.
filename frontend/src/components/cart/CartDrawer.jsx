@@ -1,9 +1,38 @@
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../../context/CartContext';
-import { formatPrice } from '../../utils/api';
+import { api, formatPrice } from '../../utils/api';
+import { getCachedSettings } from '../../utils/contactConfig';
 
 export default function CartDrawer() {
   const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeItem } = useCart();
+  const [waNumbers, setWaNumbers] = useState([]);
+
+  useEffect(() => {
+    api.getWhatsAppNumbers().then(d => { if (d) setWaNumbers(d); });
+  }, []);
+
+  const getWaNum = (waId) => {
+    if (waId && waNumbers.length > 0) {
+      const found = waNumbers.find(w => w._id === waId);
+      if (found) return found.number;
+    }
+    const { whatsappNumber } = getCachedSettings();
+    return (whatsappNumber || '').replace(/[^0-9]/g, '');
+  };
+
+  const buildWhatsAppLink = () => {
+    // Use the first item's assigned number, or fallback to default
+    const firstItem = cart.items?.[0];
+    const targetNum = getWaNum(firstItem?.whatsappNumberId);
+    const itemLines = (cart.items || []).map((item, i) => {
+      const price = item.lineTotal || (item.variant?.price || 0) * item.quantity;
+      return `${i + 1}. ${item.productName}\n   Color: ${item.variant?.color || 'N/A'}\n   Size: ${item.variant?.size || 'N/A'}\n   Qty: ${item.quantity}\n   Price: ${formatPrice(price)}`;
+    }).join('\n\n');
+    const total = formatPrice(cart.totalAmount || 0);
+    const text = `Hi! I'm interested in the following rugs:\n\n${itemLines}\n\n---\nTotal: ${total}\n\nCould you help me with more details and availability?`;
+    return `https://wa.me/${targetNum}?text=${encodeURIComponent(text)}`;
+  };
 
   return (
     <AnimatePresence>
@@ -26,8 +55,8 @@ export default function CartDrawer() {
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-[#e7f3eb]">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">shopping_bag</span>
-                <h2 className="text-lg font-bold text-[#0d1b12]">Your Cart</h2>
+                <span className="material-symbols-outlined text-primary">favorite</span>
+                <h2 className="text-lg font-bold text-[#0d1b12]">Your Wishlist</h2>
                 <span className="text-sm text-gray-500">
                   ({cart.items?.length || 0} {cart.items?.length === 1 ? 'item' : 'items'})
                 </span>
@@ -44,8 +73,8 @@ export default function CartDrawer() {
             <div className="flex-1 overflow-y-auto px-6 py-4">
               {(!cart.items || cart.items.length === 0) ? (
                 <div className="flex flex-col items-center justify-center h-full text-center">
-                  <span className="material-symbols-outlined text-6xl text-gray-300 mb-4">shopping_bag</span>
-                  <p className="text-lg font-bold text-gray-500 mb-2">Your cart is empty</p>
+                  <span className="material-symbols-outlined text-6xl text-gray-300 mb-4">favorite</span>
+                  <p className="text-lg font-bold text-gray-500 mb-2">Your wishlist is empty</p>
                   <p className="text-sm text-gray-400">Discover our handcrafted carpets</p>
                   <button onClick={() => setIsCartOpen(false)} className="btn-primary mt-6">
                     Continue Shopping
@@ -56,7 +85,11 @@ export default function CartDrawer() {
                   {cart.items.map((item) => (
                     <div key={item._id} className="flex gap-4 p-3 bg-[#f8fcf9] rounded-lg border border-[#e7f3eb]">
                       <div className="w-20 h-20 bg-[#e7f3eb] rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-2xl text-primary/40">texture</span>
+                        {item.image ? (
+                          <img src={item.image} alt={item.productName} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="material-symbols-outlined text-2xl text-primary/40">texture</span>
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="text-sm font-bold text-[#0d1b12] truncate">{item.productName}</h4>
@@ -112,10 +145,16 @@ export default function CartDrawer() {
                     {formatPrice(cart.totalAmount || 0)}
                   </span>
                 </div>
-                <p className="text-xs text-gray-400">Shipping calculated at checkout</p>
-                <button className="w-full h-12 bg-primary hover:bg-green-600 text-white rounded-lg font-bold tracking-wide transition-all">
-                  Proceed to Checkout
-                </button>
+                <p className="text-xs text-gray-400">Chat with us to finalize your order</p>
+                <a
+                  href={buildWhatsAppLink()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full h-12 bg-[#25D366] hover:bg-[#1fb855] text-white rounded-lg font-bold tracking-wide transition-all flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined">chat</span>
+                  Inquire on WhatsApp
+                </a>
                 <button
                   onClick={() => setIsCartOpen(false)}
                   className="w-full h-10 border border-primary text-primary hover:bg-primary/5 rounded-lg font-bold tracking-wide transition-all text-sm"

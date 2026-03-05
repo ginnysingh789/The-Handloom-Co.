@@ -7,8 +7,8 @@ export const staticProducts = [
     sku: 'RUG-PER-001',
     shortDescription: 'Hand-knotted pure silk rug with intricate floral medallion pattern, crafted by master artisans in Kashmir.',
     longDescription: 'This exquisite hand-knotted silk rug represents the pinnacle of Persian craftsmanship. Each piece takes over 6 months to complete, with artisans tying over 400 knots per square inch.',
-    basePrice: 45999,
-    originalPrice: 59999,
+    basePrice: 550,
+    originalPrice: 720,
     currency: '$',
     category: 'Persian',
     collection: 'Persian Heritage',
@@ -25,10 +25,10 @@ export const staticProducts = [
           'https://res.cloudinary.com/dhyjy3pnz/image/upload/v1771955284/world-weave-rugs/1771953807107-79263569-01fd-43fe-b5a2-e99904b82046_22.jpg'
         ]},
         sizes: [
-          { label: '4×6 ft', dimensions: '4 feet × 6 feet', price: 45999, stock: 5, readyToShip: true },
-          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 65999, stock: 3, readyToShip: true },
-          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 125999, stock: 2, readyToShip: false },
-          { label: '9×12 ft', dimensions: '9 feet × 12 feet', price: 175999, stock: 1, readyToShip: false }
+          { label: '4×6 ft', dimensions: '4 feet × 6 feet', price: 550, stock: 5, readyToShip: true },
+          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 800, stock: 3, readyToShip: true },
+          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 1500, stock: 2, readyToShip: false },
+          { label: '9×12 ft', dimensions: '9 feet × 12 feet', price: 2100, stock: 1, readyToShip: false }
         ]
       },
       {
@@ -39,9 +39,9 @@ export const staticProducts = [
           'https://res.cloudinary.com/dhyjy3pnz/image/upload/v1771955284/world-weave-rugs/1771953807107-79263569-01fd-43fe-b5a2-e99904b82046_22.jpg'
         ]},
         sizes: [
-          { label: '4×6 ft', dimensions: '4 feet × 6 feet', price: 45999, stock: 4, readyToShip: true },
-          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 65999, stock: 2, readyToShip: true },
-          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 125999, stock: 1, readyToShip: false }
+          { label: '4×6 ft', dimensions: '4 feet × 6 feet', price: 550, stock: 4, readyToShip: true },
+          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 800, stock: 2, readyToShip: true },
+          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 1500, stock: 1, readyToShip: false }
         ]
       },
       {
@@ -52,8 +52,8 @@ export const staticProducts = [
           'https://res.cloudinary.com/dhyjy3pnz/image/upload/v1771955281/world-weave-rugs/1771953807107-79263569-01fd-43fe-b5a2-e99904b82046_18.jpg'
         ]},
         sizes: [
-          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 65999, stock: 3, readyToShip: true },
-          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 125999, stock: 2, readyToShip: false }
+          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 800, stock: 3, readyToShip: true },
+          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 1500, stock: 2, readyToShip: false }
         ]
       }
     ],
@@ -66,7 +66,7 @@ export const staticProducts = [
     details: {
       productDetails: 'Material: 100% Pure Silk\nWeave: Hand-Knotted (400+ knots/sq inch)\nPile Height: 6mm\nBacking: Cotton\nOrigin: Kashmir, India\nPattern: Floral Medallion\nEdge: Hand-bound serging\nCertification: Ethically sourced',
       washingCare: 'Professional dry cleaning recommended\nVacuum regularly with suction only (no beater bar)\nRotate rug every 6 months for even wear\nBlot spills immediately with clean white cloth\nAvoid direct sunlight to prevent fading\nUse rug pad on hard floors',
-      shippingReturns: 'Free shipping on all orders above $10,000\nDelivery within 5-7 business days (metro cities)\n10-14 business days for remote locations\n15-day return policy for unused items\nFree pickup for returns\nCustom orders are non-returnable',
+      shippingReturns: 'Free shipping on all orders above $200\nDelivery within 5-7 business days (metro cities)\n10-14 business days for remote locations\n15-day return policy for unused items\nFree pickup for returns\nCustom orders are non-returnable',
       aboutDesign: 'The Maharaja Persian Silk Rug draws inspiration from the royal gardens of 16th-century Persia. The central medallion represents the sun, surrounded by intricate floral arabesques symbolizing paradise.'
     },
     deliveryTimeline: '5-7 business days',
@@ -83,8 +83,8 @@ export const staticProducts = [
     sku: 'RUG-MOD-002',
     shortDescription: 'Hand-tufted New Zealand wool rug with geometric abstract pattern in neutral tones.',
     longDescription: 'The Zenith rug brings contemporary elegance to any space with its abstract geometric pattern.',
-    basePrice: 32999,
-    originalPrice: 42999,
+    basePrice: 400,
+    originalPrice: 520,
     currency: '$',
     category: 'Modern',
     collection: 'Modern Minimalist',
@@ -101,9 +101,9 @@ export const staticProducts = [
           'https://res.cloudinary.com/dhyjy3pnz/image/upload/v1771955288/world-weave-rugs/1771953807107-79263569-01fd-43fe-b5a2-e99904b82046_26.jpg'
         ]},
         sizes: [
-          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 32999, stock: 8, readyToShip: true },
-          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 62999, stock: 4, readyToShip: true },
-          { label: '9×12 ft', dimensions: '9 feet × 12 feet', price: 89999, stock: 2, readyToShip: false }
+          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 400, stock: 8, readyToShip: true },
+          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 760, stock: 4, readyToShip: true },
+          { label: '9×12 ft', dimensions: '9 feet × 12 feet', price: 1080, stock: 2, readyToShip: false }
         ]
       },
       {
@@ -114,8 +114,8 @@ export const staticProducts = [
           'https://res.cloudinary.com/dhyjy3pnz/image/upload/v1771955280/world-weave-rugs/1771953807107-79263569-01fd-43fe-b5a2-e99904b82046_17.jpg'
         ]},
         sizes: [
-          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 32999, stock: 6, readyToShip: true },
-          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 62999, stock: 3, readyToShip: true }
+          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 400, stock: 6, readyToShip: true },
+          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 760, stock: 3, readyToShip: true }
         ]
       },
       {
@@ -126,8 +126,8 @@ export const staticProducts = [
           'https://res.cloudinary.com/dhyjy3pnz/image/upload/v1771955288/world-weave-rugs/1771953807107-79263569-01fd-43fe-b5a2-e99904b82046_26.jpg'
         ]},
         sizes: [
-          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 32999, stock: 5, readyToShip: true },
-          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 62999, stock: 2, readyToShip: false }
+          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 400, stock: 5, readyToShip: true },
+          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 760, stock: 2, readyToShip: false }
         ]
       }
     ],
@@ -140,7 +140,7 @@ export const staticProducts = [
     details: {
       productDetails: 'Material: 100% New Zealand Wool\nWeave: Hand-Tufted\nPile Height: 12mm\nBacking: Canvas with latex\nOrigin: Bhadohi, India\nPattern: Geometric Abstract',
       washingCare: 'Professional cleaning recommended annually\nVacuum regularly in the direction of the pile\nBlot spills immediately\nAvoid steam cleaning',
-      shippingReturns: 'Free shipping on all orders above $10,000\nDelivery within 5-7 business days\n15-day return policy\nFree pickup for returns',
+      shippingReturns: 'Free shipping on all orders above $200\nDelivery within 5-7 business days\n15-day return policy\nFree pickup for returns',
       aboutDesign: 'The Zenith rug is a celebration of modern design principles with geometric abstract patterns inspired by architectural forms.'
     },
     deliveryTimeline: '5-7 business days',
@@ -157,8 +157,8 @@ export const staticProducts = [
     sku: 'RUG-BOH-003',
     shortDescription: 'Flatweave kilim rug with vibrant tribal patterns, handwoven by nomadic artisans.',
     longDescription: 'Each Nomad Kilim tells a story through its tribal motifs and vibrant colors.',
-    basePrice: 18999,
-    originalPrice: 24999,
+    basePrice: 230,
+    originalPrice: 300,
     currency: '$',
     category: 'Bohemian',
     collection: 'Bohemian Rhapsody',
@@ -175,9 +175,9 @@ export const staticProducts = [
           'https://res.cloudinary.com/dhyjy3pnz/image/upload/v1771955286/world-weave-rugs/1771953807107-79263569-01fd-43fe-b5a2-e99904b82046_24.jpg'
         ]},
         sizes: [
-          { label: '3×5 ft', dimensions: '3 feet × 5 feet', price: 12999, stock: 10, readyToShip: true },
-          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 18999, stock: 7, readyToShip: true },
-          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 35999, stock: 4, readyToShip: true }
+          { label: '3×5 ft', dimensions: '3 feet × 5 feet', price: 160, stock: 10, readyToShip: true },
+          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 230, stock: 7, readyToShip: true },
+          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 430, stock: 4, readyToShip: true }
         ]
       },
       {
@@ -188,8 +188,8 @@ export const staticProducts = [
           'https://res.cloudinary.com/dhyjy3pnz/image/upload/v1771955279/world-weave-rugs/1771953807107-79263569-01fd-43fe-b5a2-e99904b82046_15.jpg'
         ]},
         sizes: [
-          { label: '3×5 ft', dimensions: '3 feet × 5 feet', price: 12999, stock: 8, readyToShip: true },
-          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 18999, stock: 5, readyToShip: true }
+          { label: '3×5 ft', dimensions: '3 feet × 5 feet', price: 160, stock: 8, readyToShip: true },
+          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 230, stock: 5, readyToShip: true }
         ]
       }
     ],
@@ -202,7 +202,7 @@ export const staticProducts = [
     details: {
       productDetails: 'Material: 80% Wool, 20% Cotton\nWeave: Flatweave (Kilim)\nPile Height: 3mm\nBacking: None (reversible)\nOrigin: Rajasthan, India',
       washingCare: 'Spot clean with mild detergent\nProfessional cleaning for deep stains\nVacuum both sides regularly',
-      shippingReturns: 'Free shipping on all orders above $10,000\nDelivery within 5-7 business days\n15-day return policy',
+      shippingReturns: 'Free shipping on all orders above $200\nDelivery within 5-7 business days\n15-day return policy',
       aboutDesign: 'The Nomad Kilim draws from centuries-old tribal weaving traditions of Rajasthan.'
     },
     deliveryTimeline: '3-5 business days',
@@ -219,8 +219,8 @@ export const staticProducts = [
     sku: 'RUG-MUG-004',
     shortDescription: 'Luxurious silk-wool blend rug featuring Mughal garden-inspired floral motifs with gold accents.',
     longDescription: 'Inspired by the legendary gardens of the Mughal emperors.',
-    basePrice: 78999,
-    originalPrice: 99999,
+    basePrice: 950,
+    originalPrice: 1200,
     currency: '$',
     category: 'Traditional',
     collection: 'Royal Mughal',
@@ -237,9 +237,9 @@ export const staticProducts = [
           'https://res.cloudinary.com/dhyjy3pnz/image/upload/v1771955286/world-weave-rugs/1771953807107-79263569-01fd-43fe-b5a2-e99904b82046_24.jpg'
         ]},
         sizes: [
-          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 78999, stock: 3, readyToShip: true },
-          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 149999, stock: 2, readyToShip: false },
-          { label: '10×14 ft', dimensions: '10 feet × 14 feet', price: 249999, stock: 1, readyToShip: false }
+          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 950, stock: 3, readyToShip: true },
+          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 1800, stock: 2, readyToShip: false },
+          { label: '10×14 ft', dimensions: '10 feet × 14 feet', price: 3000, stock: 1, readyToShip: false }
         ]
       },
       {
@@ -250,8 +250,8 @@ export const staticProducts = [
           'https://res.cloudinary.com/dhyjy3pnz/image/upload/v1771955284/world-weave-rugs/1771953807107-79263569-01fd-43fe-b5a2-e99904b82046_22.jpg'
         ]},
         sizes: [
-          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 78999, stock: 2, readyToShip: true },
-          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 149999, stock: 1, readyToShip: false }
+          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 950, stock: 2, readyToShip: true },
+          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 1800, stock: 1, readyToShip: false }
         ]
       }
     ],
@@ -281,8 +281,8 @@ export const staticProducts = [
     sku: 'RUG-CST-005',
     shortDescription: 'Natural jute braided rug with a relaxed coastal aesthetic.',
     longDescription: 'Bring the relaxed beauty of coastal living into your home.',
-    basePrice: 14999,
-    originalPrice: 19999,
+    basePrice: 180,
+    originalPrice: 240,
     currency: '$',
     category: 'Natural',
     collection: 'Coastal Breeze',
@@ -299,9 +299,9 @@ export const staticProducts = [
           'https://res.cloudinary.com/dhyjy3pnz/image/upload/v1771955288/world-weave-rugs/1771953807107-79263569-01fd-43fe-b5a2-e99904b82046_26.jpg'
         ]},
         sizes: [
-          { label: '4×6 ft', dimensions: '4 feet × 6 feet', price: 14999, stock: 15, readyToShip: true },
-          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 22999, stock: 10, readyToShip: true },
-          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 39999, stock: 6, readyToShip: true }
+          { label: '4×6 ft', dimensions: '4 feet × 6 feet', price: 180, stock: 15, readyToShip: true },
+          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 280, stock: 10, readyToShip: true },
+          { label: '8×10 ft', dimensions: '8 feet × 10 feet', price: 480, stock: 6, readyToShip: true }
         ]
       },
       {
@@ -312,8 +312,8 @@ export const staticProducts = [
           'https://res.cloudinary.com/dhyjy3pnz/image/upload/v1771955288/world-weave-rugs/1771953807107-79263569-01fd-43fe-b5a2-e99904b82046_26.jpg'
         ]},
         sizes: [
-          { label: '4×6 ft', dimensions: '4 feet × 6 feet', price: 14999, stock: 12, readyToShip: true },
-          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 22999, stock: 8, readyToShip: true }
+          { label: '4×6 ft', dimensions: '4 feet × 6 feet', price: 180, stock: 12, readyToShip: true },
+          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 280, stock: 8, readyToShip: true }
         ]
       }
     ],
@@ -326,7 +326,7 @@ export const staticProducts = [
     details: {
       productDetails: 'Material: 100% Natural Jute\nWeave: Hand-Braided\nPile Height: 5mm\nOrigin: West Bengal, India',
       washingCare: 'Vacuum regularly\nSpot clean with damp cloth\nAvoid excessive moisture',
-      shippingReturns: 'Free shipping on all orders above $10,000\nDelivery within 3-5 business days',
+      shippingReturns: 'Free shipping on all orders above $200\nDelivery within 3-5 business days',
       aboutDesign: 'The Coastal Jute rug celebrates the beauty of natural materials.'
     },
     deliveryTimeline: '3-5 business days',
@@ -343,8 +343,8 @@ export const staticProducts = [
     sku: 'RUG-VIN-006',
     shortDescription: 'Authentic vintage Turkish rug, overdyed in rich jewel tones.',
     longDescription: 'Each Vintage Overdyed rug begins as an authentic Turkish rug, then undergoes a meticulous overdyeing process.',
-    basePrice: 54999,
-    originalPrice: 69999,
+    basePrice: 660,
+    originalPrice: 840,
     currency: '$',
     category: 'Vintage',
     collection: 'Vintage Revival',
@@ -361,8 +361,8 @@ export const staticProducts = [
           'https://res.cloudinary.com/dhyjy3pnz/image/upload/v1771955280/world-weave-rugs/1771953807107-79263569-01fd-43fe-b5a2-e99904b82046_17.jpg'
         ]},
         sizes: [
-          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 54999, stock: 1, readyToShip: true },
-          { label: '7×10 ft', dimensions: '7 feet × 10 feet', price: 89999, stock: 1, readyToShip: true }
+          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 660, stock: 1, readyToShip: true },
+          { label: '7×10 ft', dimensions: '7 feet × 10 feet', price: 1080, stock: 1, readyToShip: true }
         ]
       },
       {
@@ -373,7 +373,7 @@ export const staticProducts = [
           'https://res.cloudinary.com/dhyjy3pnz/image/upload/v1771955288/world-weave-rugs/1771953807107-79263569-01fd-43fe-b5a2-e99904b82046_26.jpg'
         ]},
         sizes: [
-          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 54999, stock: 1, readyToShip: true }
+          { label: '5×8 ft', dimensions: '5 feet × 8 feet', price: 660, stock: 1, readyToShip: true }
         ]
       }
     ],
@@ -408,7 +408,7 @@ export const staticCollections = [
 ];
 
 export const staticAddons = [
-  { _id: 'a1', name: 'Anti-Slip Backing', description: 'Premium anti-slip rubber backing to prevent rug movement', price: 1499, tooltip: 'Recommended for hardwood and tile floors. Adds a thin rubber layer to the back of your rug.' },
-  { _id: 'a2', name: 'Stain Resistance Coating', description: 'Nano-tech stain resistance coating for easy maintenance', price: 1999, tooltip: 'Invisible protective coating that repels liquids and prevents stains. Lasts up to 2 years.' },
-  { _id: 'a3', name: 'Custom Fringe Finishing', description: 'Hand-tied decorative fringe on rug edges', price: 2499, tooltip: 'Artisan hand-tied fringe adds an elegant finishing touch to your rug.' }
+  { _id: 'a1', name: 'Anti-Slip Backing', description: 'Premium anti-slip rubber backing to prevent rug movement', price: 18, tooltip: 'Recommended for hardwood and tile floors. Adds a thin rubber layer to the back of your rug.' },
+  { _id: 'a2', name: 'Stain Resistance Coating', description: 'Nano-tech stain resistance coating for easy maintenance', price: 24, tooltip: 'Invisible protective coating that repels liquids and prevents stains. Lasts up to 2 years.' },
+  { _id: 'a3', name: 'Custom Fringe Finishing', description: 'Hand-tied decorative fringe on rug edges', price: 30, tooltip: 'Artisan hand-tied fringe adds an elegant finishing touch to your rug.' }
 ];

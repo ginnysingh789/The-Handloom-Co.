@@ -18,7 +18,7 @@ router.get('/:sessionId', async (req, res) => {
 // ADD item to cart
 router.post('/:sessionId/items', async (req, res) => {
   try {
-    const { productId, productName, variant, quantity, addons } = req.body;
+    const { productId, productName, variant, quantity, addons, image, whatsappNumberId } = req.body;
     let cart = await Cart.findOne({ sessionId: req.params.sessionId });
 
     if (!cart) {
@@ -41,7 +41,9 @@ router.post('/:sessionId/items', async (req, res) => {
         productName,
         variant,
         quantity: quantity || 1,
-        addons: addons || []
+        addons: addons || [],
+        image: image || '',
+        whatsappNumberId: whatsappNumberId || ''
       });
     }
 

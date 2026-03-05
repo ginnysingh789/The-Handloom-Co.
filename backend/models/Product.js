@@ -47,7 +47,8 @@ const productSchema = new mongoose.Schema(
     isNewArrival: { type: Boolean, default: false },
     isBestseller: { type: Boolean, default: false },
     rating: { type: Number, default: 0 },
-    reviewCount: { type: Number, default: 0 }
+    reviewCount: { type: Number, default: 0 },
+    whatsappNumberId: { type: mongoose.Schema.Types.ObjectId, ref: 'WhatsAppNumber', default: null }
   },
   { timestamps: true }
 );

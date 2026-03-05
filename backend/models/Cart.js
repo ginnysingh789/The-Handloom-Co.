@@ -15,7 +15,9 @@ const cartItemSchema = new mongoose.Schema({
       price: { type: Number }
     }
   ],
-  lineTotal: { type: Number }
+  lineTotal: { type: Number },
+  image: { type: String, default: '' },
+  whatsappNumberId: { type: String, default: '' }
 });
 
 const cartSchema = new mongoose.Schema(

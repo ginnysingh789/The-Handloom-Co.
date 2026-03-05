@@ -47,14 +47,16 @@ export function CartProvider({ children }) {
     fetchCart();
   }, [fetchCart]);
 
-  const addToCart = async (productId, productName, variant, quantity, addons) => {
+  const addToCart = async (productId, productName, variant, quantity, addons, image, whatsappNumberId) => {
     // Try API first
     const data = await api.addToCart(sessionId, {
       productId,
       productName,
       variant,
       quantity,
-      addons
+      addons,
+      image,
+      whatsappNumberId
     });
     if (data && data.items) {
       syncState(data);
@@ -80,6 +82,8 @@ export function CartProvider({ children }) {
         quantity,
         addons: addons || [],
         lineTotal: (variant?.price || 0) * quantity,
+        image: image || '',
+        whatsappNumberId: whatsappNumberId || '',
       });
     }
     localCart.totalAmount = recalcTotal(localCart.items);
