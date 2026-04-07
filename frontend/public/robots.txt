@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin
 
-Sitemap: https://worldweavecarpets.duckdns.org/sitemap.xml
+Sitemap: https://worldweavecarpets.com/sitemap.xml
