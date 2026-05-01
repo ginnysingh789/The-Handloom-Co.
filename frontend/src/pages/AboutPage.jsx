@@ -133,19 +133,22 @@ export default function AboutPage() {
                 className="space-y-5 text-slate-600 leading-relaxed"
               >
                 <p>
-                  We started as a Carpet Manufacturing Company back in the late 90s under the kind guidance of our forefathers. Initially, we started as a single manufacturing unit which was registered as <strong className="text-slate-800">World Weave Carpets</strong>, which manufactured the best quality Rugs in the City. The services were appreciated a lot by our early customers.
+                  At <strong className="text-slate-800">World Weave Carpets</strong>, we focus on creating rugs that meet the expectations of modern international markets — where design, consistency, and reliability matter as much as aesthetics.
                 </p>
                 <p>
-                  World Weave Carpets still holds a strong reputation in the Market because of the Company's great Customer Support System and the Quality which is undoubtedly reliable.
+                  Our collections are developed with a strong understanding of global trends, material preferences, and performance standards. From contemporary minimal designs to timeless textures, each piece is created to complement a wide range of interior styles across residential and commercial spaces.
                 </p>
                 <p>
-                  As the company grew, it evolved into what is now known as <strong className="text-slate-800">World Weave Carpets</strong> — aiming to provide all kinds of Rugs with more perfection and a strong database. We continue to build reliance in the Industry with 24/7 Customer Support.
+                  We work with carefully selected manufacturing processes and skilled craftsmanship to ensure uniform quality, durability, and finish across every order. Attention to detail, structured production, and quality checks at every stage allow us to deliver products that meet buyer expectations consistently.
                 </p>
                 <p>
-                  World Weave Carpets has been the most trusted brand in the city because it believes in Values and Ethics of doing Business. We stand by our morals to keep smooth workings and ethics alive.
+                  Understanding the needs of international clients, we emphasize clear communication, dependable timelines, and flexibility in customization. Whether working on private labels, bulk orders, or curated collections, our approach remains solution-oriented and professional.
+                </p>
+                <p>
+                  Sustainability and responsible sourcing are part of our ongoing focus. We continuously explore better materials and processes that align with evolving environmental and ethical standards in global markets.
                 </p>
                 <p className="font-medium text-slate-800">
-                  World Weave Carpets now expands to do business globally and assures the best quality products and support to all its Customers.
+                  As we grow, our goal remains simple — to build long-term partnerships by delivering well-crafted products, dependable service, and a seamless buying experience.
                 </p>
               </motion.div>
             </div>
