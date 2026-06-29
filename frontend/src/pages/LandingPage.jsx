@@ -122,18 +122,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Trust Signals */}
-      <section className="py-12 border-b border-slate-200 bg-white">
-        <div className="max-w-[1400px] mx-auto px-6 text-center">
-          <p className="text-xs font-bold tracking-[0.2em] text-slate-400 mb-8 uppercase">Trusted by Interior Designers Worldwide</p>
-          <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-12 md:gap-24 opacity-60">
-            <span className="text-sm sm:text-xl font-serif italic text-slate-800">Vogue Living</span>
-            <span className="text-sm sm:text-xl font-bold tracking-tight text-slate-800">ARCHITECTURAL DIGEST</span>
-            <span className="text-sm sm:text-xl font-serif text-slate-800">ELLE DECOR</span>
-            <span className="text-sm sm:text-xl font-mono tracking-tighter text-slate-800">DWELL</span>
-          </div>
-        </div>
-      </section>
 
       {/* Eco-Friendly Commitment Banner */}
       <section className="py-10 sm:py-16 bg-gradient-to-r from-[#e8f5e9] via-[#f1f8f2] to-[#e8f5e9]">
